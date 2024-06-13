@@ -8,7 +8,7 @@ This image inherits from the [official postgres image](https://hub.docker.com/_/
 
 Start Postgres server running in the background:
 
-    docker run --name mypostgres -p 5432:5432 -e POSTGRES_PASSWORD=mypassword -d mcs07/postgres-rdkit
+    docker run --platform linux/amd64 --name mypostgres -p 5432:5432 -e POSTGRES_PASSWORD=mypassword -d postgres16-rdkit2024_03_3
 
 Or run with an application via Docker Compose:
 
@@ -16,18 +16,13 @@ Or run with an application via Docker Compose:
 services:
 
   db:
-    image: mcs07/postgres-rdkit
+    image: postgres16-rdkit2024_03_3
     restart: always
     environment:
       POSTGRES_PASSWORD: mypassword
     volumes:
       - /path/to/pgdata:/var/lib/postgresql/data
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
 ```
 
 This image exposes port 5432 (the postgres port), so standard container linking will make it automatically available to the linked containers.
@@ -42,9 +37,10 @@ This image exposes port 5432 (the postgres port), so standard container linking 
 See the [official postgres image](https://hub.docker.com/_/postgres/) for more details.
 
 ## Building
-
-A multi-stage docker build is used to produce a lightweight production image without all the build dependencies. This image uses [mcs07/rdkit](https://github.com/mcs07/docker-rdkit) as an earlier build stage to provide the RDKit libraries.
-
 To build, run:
-
-    docker build -t postgres-rdkit .
+  docker run --network gpcrdb -d --platform linux/amd64 --name postgres16-rdkit2024_03_3 \
+  -v postgres_data:/var/lib/postgresql/data \
+  -e POSTGRES_USER=protwis \
+  -e POSTGRES_PASSWORD=protwis \
+  -p 5432:5432 \
+  postgres16-rdkit2024_03_3
