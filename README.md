@@ -71,4 +71,4 @@ shared_buffers = 2048MB           # min 128kB, PostgreSQL's "dedicated" RAM
 work_mem = 128MB              # min 64kB, maximum amount of RAM memory to be used by a query
                               # operation before it starts to use disk memory instead.
 ```
-Thee settings increase the RAM requirements for PostgreSQL to run.
+These settings increase the RAM requirements for PostgreSQL to run.
