@@ -88,6 +88,8 @@ RUN wget --quiet https://github.com/rdkit/rdkit/archive/refs/tags/${RDKIT_VERSIO
  && rm ${RDKIT_VERSION}.tar.gz
 
 # CREATE CONDA RDKIT BUILD ENVIRONMENT
+# source: https://www.rdkit.org/docs/Install.html
+
 ADD requeriments_conda_rdkit_build.txt .
 # RUN conda create -y -c conda-forge --name rdkit_built_dep --file requeriments_conda_rdkit_build.txt
 RUN conda create -y --name rdkit_built_dep 
@@ -99,6 +101,11 @@ RUN pip install yapf==0.11.1
 RUN pip install coverage==3.7.1
 
 # BUILD RDKIT
+
+# source: https://www.rdkit.org/docs/Install.html
+# source: https://github.com/rdkit/rdkit/blob/master/Code/PgSQL/rdkit/README.md
+
+
 RUN mkdir /rdkit/build
 WORKDIR /rdkit/build
 RUN conda activate rdkit_built_dep;cmake -DPy_ENABLE_SHARED=1 \

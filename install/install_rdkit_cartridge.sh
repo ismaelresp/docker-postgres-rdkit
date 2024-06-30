@@ -32,6 +32,9 @@ wget --quiet https://github.com/rdkit/rdkit/archive/refs/tags/${RDKIT_VERSION}.t
 
 
 conda activate
+
+# source: https://www.rdkit.org/docs/Install.html
+
 conda create -y -c conda-forge --name rdkit_built_dep --file requeriments_conda_rdkit_build.txt
 # conda create -y --name rdkit_built_dep 
 # conda activate rdkit_built_dep;conda install -y -c conda-forge numpy matplotlib catch2 pytest; \
@@ -43,6 +46,10 @@ pip install yapf==0.11.1
 pip install coverage==3.7.1
 
 # BUILDING RDKIT
+
+# source: https://www.rdkit.org/docs/Install.html
+# source: https://github.com/rdkit/rdkit/blob/master/Code/PgSQL/rdkit/README.md
+
 mkdir "$RDBASE"/build
 pushd "$RDBASE"/build
 conda activate rdkit_built_dep;cmake -DPy_ENABLE_SHARED=1 \
