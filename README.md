@@ -47,3 +47,28 @@ To build, run:
   -p 5432:5432 \
   postgres16-rdkit2024_03_3
 ```
+## Performance optimization
+Source: https://www.rdkit.org/docs/Cartridge.html#configuration
+
+### For building the database
+To improve performance while storing RDKIT molecule objects and fingerprints into the database, and while building the indexes, a couple of PostgreSQL configuration settings in postgresql.conf can be changed:
+
+```
+synchronous_commit = off      # immediate fsync at commit
+full_page_writes = off            # recover from partial page writes
+```
+
+**synchronous_commit = off**: increases the change of losing commits to the database if a sudden postgresql server crash happens. Commits will be reported as executed even if there are not stored and flushed into a durable storage (e.g. a hard drive or SSD).
+
+**full_page_writes = off**: speeds normal operation, but might lead to either unrecoverable data corruption, or silent data corruption, after a system failure.
+
+### For queries (structural searches)
+And to improve search performance, we can allow postgresql to use more memory than the extremely conservative default settings:
+
+```
+shared_buffers = 2048MB           # min 128kB, PostgreSQL's "dedicated" RAM
+                  # (change requires restart)
+work_mem = 128MB              # min 64kB, maximum amount of RAM memory to be used by a query
+                              # operation before it starts to use disk memory instead.
+```
+Thee settings increase the RAM requirements for PostgreSQL to run.
