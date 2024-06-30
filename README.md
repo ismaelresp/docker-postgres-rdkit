@@ -38,9 +38,12 @@ See the [official postgres image](https://hub.docker.com/_/postgres/) for more d
 
 ## Building
 To build, run:
+
+```bash
   docker run --network gpcrdb -d --platform linux/amd64 --name postgres16-rdkit2024_03_3 \
   -v postgres_data:/var/lib/postgresql/data \
   -e POSTGRES_USER=protwis \
   -e POSTGRES_PASSWORD=protwis \
   -p 5432:5432 \
   postgres16-rdkit2024_03_3
+```
