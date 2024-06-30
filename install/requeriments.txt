@@ -4,7 +4,7 @@ apt-get install psmisc
 
 apt-get install vim
 #OR
-
+apt-get install nano
 
 # Login as root with:
 su root
@@ -45,6 +45,8 @@ cat /etc/init.d/postgresql
 
 echo "### ls -l /etc/rc*:"
 ls -l /etc/rc*
+
+
 
 
 
