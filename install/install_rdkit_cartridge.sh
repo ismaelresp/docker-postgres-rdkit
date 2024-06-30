@@ -81,7 +81,7 @@ mkdir -p "$PG_ETC_MAIN_PATH"
 # source: https://perldoc.perl.org/variables/%25ENV
 # from 'pg_ctlcluster'. It is a perl script:
 # # prepare environment (empty except for content of 'environment', and LANG)
-# %ENV = read_cluster_conf_file $version, $cluster, 'environment'; # read_cluster_conf_file: Reads config file in the cluster folder.
+# %ENV = read_cluster_conf_file $version, $cluster, 'environment'; # read_cluster_conf_file: Reads a config file in a cluster folder.
 #                                                                  # Defined in 'PgCommon.pm'. $version is the PostgreSQL major version.
 #                                                                  # $cluster is name of the cluster. 'main' by default.
 #                                                                  # 'environment' is a file with a PostgreSQL config file format. 
