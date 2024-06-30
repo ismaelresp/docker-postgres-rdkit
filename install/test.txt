@@ -1,0 +1,14 @@
+# INSTALLATION INSTRUCTIONS TEST COMMANDS:
+tar zcvf install.tar.gz install
+docker run --platform linux/amd64 -it openquantumsafe/ci-ubuntu-bionic-x86_64 bash
+# docker cp install.tar.gz [container]:/root
+docker cp install.tar.gz friendly_ptolemy:/root
+# IN CONTAINER TERMINAL:
+cd ; rm -r install
+tar zxvf install.tar.gz install
+cd install
+apt-get update
+apt-get install -yq --no-install-recommends postgresql-10
+
+Ver Cluster Port Status Owner    Data directory              Log file
+10  main    5432 down   postgres /var/lib/postgresql/10/main /var/log/postgresql/postgresql-10-main.log

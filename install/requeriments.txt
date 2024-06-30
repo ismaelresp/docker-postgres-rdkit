@@ -1,0 +1,12 @@
+# Login as root with:
+su root
+# AND then:
+su postgres
+# OR run on terminal
+sudo su postgres
+# After that, running
+psql
+# must start a working psql interactive session
+
+# Requires postgresql peer authentication enabled. Add the following line to pg_hba.conf if not present uncommented:
+local  all      all          peer
