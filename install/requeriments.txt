@@ -4,7 +4,7 @@ apt-get install psmisc
 
 apt-get install vim
 #OR
-
+apt-get install nano
 
 # Login as root with:
 su root
@@ -31,8 +31,23 @@ pstree
 echo "### service postgresql status:"
 service postgresql status
 
+echo "### service postgresql@10-main status:"
+service postgresql@10-main status
+
+echo "### service postgre* status:"
+service postgre* status
+
 echo "### systemctl status postgresql.service:"
 systemctl status postgresql.service
+
+echo "### systemctl status postgresql@10-main.service:"
+systemctl status postgresql@10-main.service
+
+echo "### systemctl status postgre*:"
+systemctl status postgre*
+
+echo '### find /lib/systemd -iname "postgre*":'
+find /lib/systemd -iname "postgre*"
 
 echo "### cat /etc/postgresql/10/main/environment:"
 cat /etc/postgresql/10/main/environment
@@ -46,5 +61,9 @@ cat /etc/init.d/postgresql
 echo "### ls -l /etc/rc*:"
 ls -l /etc/rc*
 
+echo '### find / -iname "postgre*":'
+find / -iname "postgre*"
 
+echo '### find / -iname "postgre*":'
+find / -iname "postgre*"
 

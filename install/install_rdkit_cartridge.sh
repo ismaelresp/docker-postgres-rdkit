@@ -75,6 +75,26 @@ make  -j $(nproc)
 # INSTALLING RDKIT IN $RDBASE AND POSTGRESQL RDKIT EXTENSION IN POSTGRESQL LIB
 make install
 mkdir -p "$PG_ETC_MAIN_PATH"
+
+# %ENV in perl, the hash %ENV contains your current environment. Setting a value in ENV changes the environment for 
+# any child processes you subsequently fork() off.
+# source: https://perldoc.perl.org/variables/%25ENV
+# from 'pg_ctlcluster'. It is a perl script:
+# # prepare environment (empty except for content of 'environment', and LANG)
+# %ENV = read_cluster_conf_file $version, $cluster, 'environment'; # read_cluster_conf_file: Reads config file in the cluster folder.
+#                                                                  # Defined in 'PgCommon.pm'. $version is the PostgreSQL major version.
+#                                                                  # $cluster is name of the cluster. 'main' by default.
+#                                                                  # 'environment' is a file with a PostgreSQL config file format. 
+# [...]
+#  exec $pg_ctl @options or error "could not exec $pg_ctl @options: $!"; # $pg_ctl value is the path to the specific cluster pg_ctl.
+#                                                                        # pg_ctl and its child processes inherit the enviroment in %ENV.
+#
+# 'pg_ctlcluster' expects cluster folders to be in the path in the environment variable PG_CLUSTER_CONF_ROOT.
+# If PG_CLUSTER_CONF_ROOT is not set, it defaults to '/etc/postgresql', as set in the perl package file 'PgCommon.pm'.
+# Paths to cluster folders must follow the following path: "$PG_CLUSTER_CONF_ROOT/$version/$cluster/"
+# systemd and SysV init.d scripts start PostgreSQL running the 'pg_ctlcluster $version $cluster start'
+# or 'pg_ctlcluster ${version}-${cluster start}'command for running the perl script with the filename 'pg_ctlcluster'.
+
 echo "LD_LIBRARY_PATH = '$RDBASE/lib:$CONDA_PREFIX/lib'" | tee -a "$PG_ETC_MAIN_PATH"/environment
 
 popd
