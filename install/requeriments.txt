@@ -1,3 +1,11 @@
+#Run to install pstree
+apt-get update
+apt-get install psmisc
+
+apt-get install vim
+#OR
+
+
 # Login as root with:
 su root
 # AND then:
@@ -10,3 +18,33 @@ psql
 
 # Requires postgresql peer authentication enabled. Add the following line to pg_hba.conf if not present uncommented:
 local  all      all          peer
+
+echo "### pg_lsclusters -s:"
+pg_lsclusters -s
+
+echo "### ps -fe | cat | grep postgre:"
+ps -fe | cat | grep postgre
+
+echo "### pstree":
+pstree
+
+echo "### service postgresql status:"
+service postgresql status
+
+echo "### systemctl status postgresql.service:"
+systemctl status postgresql.service
+
+echo "### cat /etc/postgresql/10/main/environment:"
+cat /etc/postgresql/10/main/environment
+
+echo "### ls -l /etc/init.d:"
+ls -l /etc/init.d 
+
+echo "### cat /etc/init.d/postgresql:"
+cat /etc/init.d/postgresql
+
+echo "### ls -l /etc/rc*:"
+ls -l /etc/rc*
+
+
+
