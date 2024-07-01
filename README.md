@@ -58,7 +58,7 @@ synchronous_commit = off      # immediate fsync at commit
 full_page_writes = off            # recover from partial page writes
 ```
 
-**synchronous_commit = off**: increases the change of losing commits to the database if a sudden postgresql server crash happens. Commits will be reported as executed even if there are not stored and flushed into a durable storage (e.g. a hard drive or SSD).
+**synchronous_commit = off**: speeds normal operation, but increases the change of losing commits to the database if a sudden postgresql server crash happens. Commits will be reported as executed even if there are not stored and flushed into a durable storage (e.g. a hard drive or SSD).
 
 **full_page_writes = off**: speeds normal operation, but might lead to either unrecoverable data corruption, or silent data corruption, after a system failure.
 
