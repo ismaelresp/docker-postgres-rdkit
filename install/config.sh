@@ -1,5 +1,7 @@
 #! /bin/bash -i
 
+#Adjust number of CPUs. Use all available CPUs by default.
+ncpu=$(nproc)
 #Adjust postgresql major version
 export PG_MAJOR=10
 #Adjust path to 'bin' postgresql binaries folder

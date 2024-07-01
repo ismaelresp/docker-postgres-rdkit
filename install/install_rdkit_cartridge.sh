@@ -70,7 +70,7 @@ conda activate rdkit_built_dep;cmake -DPy_ENABLE_SHARED=1 \
   -D PostgreSQL_LIBRARY="/usr/lib/x86_64-linux-gnu/libpq.so.5" \
   ..
 
-make  -j $(nproc)
+make  -j $ncpu
 
 # INSTALLING RDKIT IN $RDBASE AND POSTGRESQL RDKIT EXTENSION IN POSTGRESQL LIB
 make install
