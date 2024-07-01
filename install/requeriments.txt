@@ -20,6 +20,9 @@ select usesuper from pg_user where usename = CURRENT_USER;
 # Requires postgresql peer authentication enabled. Add the following line to pg_hba.conf if not present uncommented:
 local  all      all          peer
 
+echo "### echo $(nproc):"
+echo $(nproc)
+
 echo "### pg_lsclusters -s:"
 pg_lsclusters -s
 
