@@ -65,7 +65,7 @@ To install the RDKit Cartridge:
 14. Run in the terminal `cd; bash -i test_rdkit_cartridge.sh` to start the test.
 
 15. If a test step does not progress for more than 5 min, take a note of the name and number of the lastest step. 
-    Then, try to stop the script with pressing *CONTROL+C* in terminal. 
+    Then, try to stop the script by pressing *CONTROL+C* in the terminal. 
     If it does not respond, kill the python process from another terminal or close the terminal. 
     Repeat *step 13* and jump to *step 16*.
 
