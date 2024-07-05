@@ -4,7 +4,7 @@ a. PostgreSQL is already installed with peer authentication is enabled.
 So, the following line in pg_hba.conf is present and uncommented:
 local  all      all          peer
 
-PostgreSQL might require to be updated to the last minor version in the Ubuntu repository to match
+PostgreSQL might require to be updated to the lastest minor version in the Ubuntu repository to match
 the version of the package postgresql-server-dev-$PG_MAJOR . Minor version updates hardly ever require
 to migrate the database data or configuration files.
 
