@@ -1,6 +1,9 @@
+Requeriments:
+- Ubuntu OS (tested only in Bionic 18.04)
+
 The installation scripts assume:
 
-a. PostgreSQL is already installed with peer authentication is enabled. 
+a. PostgreSQL is already installed with peer authentication enabled. 
 So, the following line in pg_hba.conf is present and uncommented:
 local  all      all          peer
 
@@ -15,7 +18,7 @@ c. You have access as a sudoer user.
 If not, follow the instructions removing 'sudo ' from the commands and run them after login in a terminal as 'root'.
 
 d. If you choose not to follow the steps that begin with 'If you do not want to use a previously installed conda',
-change CONDA_INSTALL_DIR variable in config.sh to the value of your environmental variable CONDA_PREFIX after 
+change CONDA_INSTALL_DIR variable in config.sh to the value of your environment variable CONDA_PREFIX after 
 running in a terminal 'conda activate base'. You can get that value with: 'echo $CONDA_PREFIX'.
 In this case, a conda enviroment called 'rdkit_built_dep', will be created in the conda installation in 
 $CONDA_INSTALL_DIR. That environment contains libraries required by the RDKIT cartridge to run
@@ -29,7 +32,7 @@ To install the RDKIT cartridge:
 
  3. Check the variables in config.sh and change accordingly to your computer system. Do not forget to save the changes.
 
- 4. Make a backup of ~/.bashrc at the home of the user running the step 6.
+ 4. Make a backup of ~/.bashrc at the home of the user running the step 6 (appart from the automatically created one by the scripts).
     (If it is root, usually is /root/.bashrc . If the user is a sudoer, it is usually the home directory of the user and not
     /root).
 
@@ -42,6 +45,10 @@ To install the RDKIT cartridge:
 
  7. If you ran the command in the previous step, run 'bash' in the terminal or repeat step 2.
 
+CAUTION: Following step ERASES the folder, subfolders and its contents or the file in the path $RDBASE, a variable set up in config.sh,
+'/rdkit' by default.
+CAUTION: Following step ERASES the file ${RDKIT_VERSION}.tar.gz in the current working directory. ${RDKIT_VERSION} a variable set up 
+in config.sh, and its value followes by default the pattern  'Release_yyyy_mm_n' , where y, m and n are numbers.
  8. Run in the terminal 'sudo bash -i install_rdkit_cartridge.sh'.
 
  9. Restart postgresql or reboot the machine. Repeat step 2.
@@ -61,7 +68,7 @@ DANGER!!!: THE FOLLOWING COMMANDS WILL WRITE IN DATABASES. THEY ARE SUPPOSED TO 
 
 14. Run in the terminal 'cd; bash -i test_rdkit_cartridge.sh' to start the test.
 
-15. If a test step does not progress for more than 5 min, take a note of the name and number of the last step. 
+15. If a test step does not progress for more than 5 min, take a note of the name and number of the lastest step. 
     Then, try to stop the script with pressing CONTROL+C in terminal. 
     If it does not respond, kill the python process from another terminal or close the terminal. 
     Repeat step 13 and jump to step 16.
@@ -74,7 +81,7 @@ DANGER!!!: THE FOLLOWING COMMANDS WILL WRITE IN DATABASES. THEY ARE SUPPOSED TO 
     [name_of_the_step_failed] is a regular expression matching the name of the step failed. 
 
 Once you have a working installation of the RDKIT cartridge if you have installed conda, you might want to restore 
-/etc/profile.d/conda.sh and ~/.bashrc files.
+and ~/.bashrc files.
 You can do this with:
-mv ~/.bashrc.rdkit_cartridge_bkp /etc/profile.d/conda.sh
+mv ~/.bashrc.rdkit_cartridge_bkp ~/.bashrc
 

@@ -34,6 +34,10 @@ SHA256SUM_S390X="e973f1b6352d58b1ab35f30424f1565d7ffa469dcde2d52c86ec1c117db11aa
 INSTALLER_URL_AARCH64="https://repo.anaconda.com/miniconda/Miniconda3-py312_24.4.0-0-Linux-aarch64.sh"
 SHA256SUM_AARCH64="832d48e11e444c1a25f320fccdd0f0fabefec63c1cd801e606836e1c9c76ad51"
 
+if [ -e ~/.bashrc.rdkit_cartridge_bkp ]; then
+    mv ~/.bashrc.rdkit_cartridge_bkp ~/.bashrc.rdkit_cartridge_bkp_$(date +"%Y%m%d%H%M%S%3N")
+fi
+
 cp ~/.bashrc ~/.bashrc.rdkit_cartridge_bkp
 
 set -x && \

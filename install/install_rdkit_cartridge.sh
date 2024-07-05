@@ -22,25 +22,52 @@ apt-get update \
 
 # apt-get install -yq --no-install-recommends postgresql-$PG_MAJOR
 
+
+# DOWNLOAD RDKIT
+if [ -d ${RDKIT_VERSION}.tar.gz ]; then
+  echo "${RDKIT_VERSION}.tar.gz is a directory. Cannot download and save RDKit release tar.gz file. Please, rename or move such directory. Aborting..."
+  exit 1
+elif [ -f ${RDKIT_VERSION}.tar.gz ]; then
+  echo "Skipping download of ${RDKIT_VERSION}.tar.gz. File already exists. Using already present './${RDKIT_VERSION}.tar.gz' as RDKit release tar.gz file."
+else
+  wget --quiet https://github.com/rdkit/rdkit/archive/refs/tags/${RDKIT_VERSION}.tar.gz
+fi
+
+if [ ! -f ${RDKIT_VERSION}.tar.gz ]; then
+  echo "Cannot download ${RDKIT_VERSION}.tar.gz. Please, try to run the script later or download from https://github.com/rdkit/rdkit/archive/refs/tags/${RDKIT_VERSION}.tar.gz or from the official RDKit source code repository and save the file as '${RDKIT_VERSION}.tar.gz' in the current working directory. Aborting..."
+  exit 1
+fi
+
+if [ ! -d "$RDBASE" ]; then
+  echo "Cannot untar ${RDKIT_VERSION}.tar.gz in the working directory or cannot move its contents to '$RDBASE'. Aborting..."
+  exit 1
+fi
+
 # REMOVE ALL CONTENTS IN $RDBASE
 rm -r "$RDBASE"
-# DOWNLOAD RDKIT
-wget --quiet https://github.com/rdkit/rdkit/archive/refs/tags/${RDKIT_VERSION}.tar.gz \
- && tar -xzf ${RDKIT_VERSION}.tar.gz \
+
+# UNTAR RDKIT
+tar -xzf ${RDKIT_VERSION}.tar.gz \
  && mv rdkit-${RDKIT_VERSION} "$RDBASE" \
  && rm ${RDKIT_VERSION}.tar.gz
+if [ ! -d "$RDBASE" ]; then
+  echo "Cannot untar ${RDKIT_VERSION}.tar.gz in the working directory or cannot move its contents to '$RDBASE'. Aborting..."
+  exit 1
+fi
 
 
 conda activate
 
 # source: https://www.rdkit.org/docs/Install.html
-
+# CREATE ENVIRONMENT ONLY WITH FROZEN VERSIONS OF PACKAGES AND LIBRARIES
 conda create -y -c conda-forge --name rdkit_built_dep --file requeriments_conda_rdkit_build.txt
-# conda create -y --name rdkit_built_dep 
-# conda activate rdkit_built_dep;conda install -y -c conda-forge numpy matplotlib catch2 pytest; \
-# conda install -y -c conda-forge cmake cairo pillow eigen pkg-config; \
-# conda install -y -c conda-forge boost-cpp boost py-boost pandas; \
-# conda install -y -c conda-forge gxx_linux-64;
+# # USE LATESTS PACKAGES AND LIBRARIES INSTEAD (might only work with latest RDKit release)
+# # conda create -y --name rdkit_built_dep 
+# # conda activate rdkit_built_dep;conda install -y -c conda-forge numpy matplotlib catch2 pytest; \
+# # conda install -y -c conda-forge cmake cairo pillow eigen pkg-config; \
+# # conda install -y -c conda-forge boost-cpp boost py-boost pandas; \
+# # conda install -y -c conda-forge gxx_linux-64;
+
 conda activate rdkit_built_dep
 pip install yapf==0.11.1
 pip install coverage==3.7.1
@@ -76,7 +103,7 @@ make  -j $ncpu
 make install
 mkdir -p "$PG_ETC_MAIN_PATH"
 
-# %ENV in perl, the hash %ENV contains your current environment. Setting a value in ENV changes the environment for 
+# %ENV in perl: the hash %ENV contains your current environment. Setting a value in ENV changes the environment for 
 # any child processes you subsequently fork() off.
 # source: https://perldoc.perl.org/variables/%25ENV
 # from 'pg_ctlcluster'. It is a perl script:

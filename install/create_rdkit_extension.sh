@@ -1,10 +1,10 @@
 #! /bin/bash
 source config.sh
 
-# # POSTGRES TEST RUN (for testing in a machine with no postgres DB initialized)
+# # POSTGRES TEST RUN
 # # Distro default DAEMON:
 # service postgresql start
-# # TERMINAL:
+# # TERMINAL (for testing in a machine with no postgres DB initialized):
 # TESTING_DB_PATH="/var/lib/rdkit-cartridge-testing/postgresql/data/"
 # POSTGRES_SUPERUSER=postgres
 # PG_MAJOR=10

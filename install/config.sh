@@ -14,7 +14,7 @@ CONDA_INSTALL_DIR='/opt/conda'
 export PATH="$CONDA_INSTALL_DIR"/bin:"$PG_BIN_PATH":$PATH
 #RDKIT VERSION for the postgresql cartridge. It does not have to match the one installed together with django.
 RDKIT_VERSION=Release_2024_03_3
-#RDKIT source, build, and instalation folder
+#RDKIT source, build, and instalation folder. ERASED by install_rdkit_cartridge.sh
 RDBASE=/rdkit
 
 # TESTING PARMETERS
