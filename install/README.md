@@ -26,7 +26,7 @@ You can get that value with: `echo $CONDA_PREFIX`.
 
 In this case, a *conda* environment called *rdkit_built_dep* will be created in the *conda* installation in *$CONDA_INSTALL_DIR*. That environment contains libraries required by the RDKit Cartridge to run properly.
 
-## Installation
+# Installation
 To install the RDKit Cartridge:
 
  1. Copy the files in this folder to a local folder in your home directory.
@@ -44,17 +44,17 @@ To install the RDKit Cartridge:
  
  7. If you ran the command in the previous step, run 'bash' in the terminal or repeat step 2.
 
-**CAUTION:** Following step **ERASES** the folder, subfolders and its contents or the file in the path *$RDBASE*, a variable set up in `config.sh`, */rdkit* by default.
+**CAUTION:** Next step **ERASES** the folder, subfolders and its contents or the file in the path *$RDBASE*, a variable set up in `config.sh`, */rdkit* by default.
 
-**CAUTION:** Following step **ERASES** the file ${*RDKIT_VERSION*}*.tar.gz* in the current working directory. ${*RDKIT_VERSION*} a variable set up in `config.sh`, and its value followes by default the pattern  *Release_yyyy_mm_n* , where *y*, *m* and *n* are numbers.
+**CAUTION:** Next step **ERASES** the file ${*RDKIT_VERSION*}*.tar.gz* in the current working directory. ${*RDKIT_VERSION*} is a variable set up in `config.sh`, and its value follows by default the pattern  *Release_yyyy_mm_n* , where *y*, *m* and *n* are numbers.
 
  8. Run in the terminal `sudo bash -i install_rdkit_cartridge.sh`.
 
  9. Restart postgresql or reboot the machine. Repeat *step 2*.
 
-10. Run in the terminal *sudo create_rdkit_extension.sh*.
+10. Run in the terminal `sudo create_rdkit_extension.sh`.
 
-## Testing installation (RECOMMENDED)
+# Testing installation (RECOMMENDED)
 
 12. Run in the terminal `sudo bash -i config_test_rdkit_cartridge.sh` to prepare the testing environment to check if the cartridge has been built correctly.
 
@@ -71,9 +71,11 @@ To install the RDKit Cartridge:
 
 16. Run in the terminal `cd; bash -i test_rdkit_cartridge.sh -I [number]` to resume the tests. `[number]` is the ID number of the test.
 
-17. If you get an error while running test_rdkit_cartridge.sh or a test fails, your build or installation has errors. Send to Ismael the output of `cd; bash -i test_rdkit_cartridge.sh -VV -R [name_of_the_step_failed]`.  `[name_of_the_step_failed]` is a regular expression matching the name of the step failed. 
+17. If you get an error while running test_rdkit_cartridge.sh or a test fails, your build or installation has errors.Send to Ismael the output of `cd; bash -i test_rdkit_cartridge.sh -VV -R [name_of_the_step_failed]`.  `[name_of_the_step_failed]` is a regular expression matching the name of the step failed.
 
+# Restoring *~/.bashrc*
 Once you have a working installation of the RDKit Cartridge if you have installed *conda*, you might want to restore and *~/.bashrc* files.
 You can do this with:
-
-    mv ~/.bashrc.rdkit_cartridge_bkp ~/.bashrc
+```bash
+mv ~/.bashrc.rdkit_cartridge_bkp ~/.bashrc
+```
