@@ -52,7 +52,7 @@ To install the RDKit Cartridge:
 
  9. Restart postgresql or reboot the machine. Repeat *step 2*.
 
-10. Run in the terminal `sudo create_rdkit_extension.sh`.
+10. Run in the terminal `sudo bash create_rdkit_extension.sh`.
 
 # Testing installation (RECOMMENDED)
 
