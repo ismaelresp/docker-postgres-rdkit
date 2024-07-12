@@ -45,7 +45,9 @@ To install the RDKit Cartridge:
  7. If you ran the command in the previous step, run 'bash' in the terminal or repeat step 2.
 
 **CAUTION:** Next step **ERASES** the folder, subfolders and its contents or the file in the path *$RDBASE*, a variable set up in `config.sh`, */rdkit* by default.
-**CAUTION:** Next step **ERASES** the folder, subfolders and its contents or the file in the path *rdkit-*{*RDKIT_VERSION*}*.tar.gz* in the current working directory. ${*RDKIT_VERSION*} is a variable set up in `config.sh`, and its value follows by default the pattern  *Release_yyyy_mm_n* , where *y*, *m* and *n* are numbers.
+
+**CAUTION:** Next step **ERASES** the folder, subfolders and its contents or the file in the path *rdkit-*${*RDKIT_VERSION*}*.tar.gz* in the current working directory. ${*RDKIT_VERSION*} is a variable set up in `config.sh`, and its value follows by default the pattern  *Release_yyyy_mm_n* , where *y*, *m* and *n* are numbers.
+
 **CAUTION:** Next step **ERASES** the file ${*RDKIT_VERSION*}*.tar.gz* in the current working directory. ${*RDKIT_VERSION*} is a variable set up in `config.sh`, and its value follows by default the pattern  *Release_yyyy_mm_n* , where *y*, *m* and *n* are numbers.
 
  8. Run in the terminal `sudo bash -i install_rdkit_cartridge.sh`.
