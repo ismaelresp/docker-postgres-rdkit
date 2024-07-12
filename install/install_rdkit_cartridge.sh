@@ -2,8 +2,8 @@
 
 source config.sh
 
-apt-get update \
-&& apt-get install -yq --no-install-recommends \
+apt-get update
+apt-get install -yq --no-install-recommends \
     ca-certificates \
     build-essential \
     wget \
@@ -38,18 +38,15 @@ if [ ! -f ${RDKIT_VERSION}.tar.gz ]; then
   exit 1
 fi
 
-if [ ! -d "$RDBASE" ]; then
-  echo "Cannot untar ${RDKIT_VERSION}.tar.gz in the working directory or cannot move its contents to '$RDBASE'. Aborting..."
-  exit 1
-fi
-
 # REMOVE ALL CONTENTS IN $RDBASE
 rm -r "$RDBASE"
 
+# REMOVE ALL CONTENTS IN rdkit-${RDKIT_VERSION}
+rm -r rdkit-${RDKIT_VERSION}
+
 # UNTAR RDKIT
-tar -xzf ${RDKIT_VERSION}.tar.gz \
- && mv rdkit-${RDKIT_VERSION} "$RDBASE" \
- && rm ${RDKIT_VERSION}.tar.gz
+tar -xzf ${RDKIT_VERSION}.tar.gz
+mv rdkit-${RDKIT_VERSION} "$RDBASE"
 if [ ! -d "$RDBASE" ]; then
   echo "Cannot untar ${RDKIT_VERSION}.tar.gz in the working directory or cannot move its contents to '$RDBASE'. Aborting..."
   exit 1
@@ -100,7 +97,7 @@ conda activate rdkit_built_dep;cmake -DPy_ENABLE_SHARED=1 \
 make  -j $ncpu
 
 # INSTALLING RDKIT IN $RDBASE AND POSTGRESQL RDKIT EXTENSION IN POSTGRESQL LIB
-make install
+make install && rm ${RDKIT_VERSION}.tar.gz
 mkdir -p "$PG_ETC_MAIN_PATH"
 
 # %ENV in perl: the hash %ENV contains your current environment. Setting a value in ENV changes the environment for 
