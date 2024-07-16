@@ -152,13 +152,12 @@ WORKDIR /rdkit/build
 
 # POSTGRES SERVER CONFIGURATION
 ADD postgresql.conf /
-RUN cp /postgresql.conf /var/lib/postgresql/data/postgresql.conf
 
 # SETUP POSTGRES FOR TESTING
 RUN su postgres -l -c 'conda init'
 ENV POSTGRES_USER=protwis
 STOPSIGNAL SIGINT
-CMD useradd -m -s /bin/bash $POSTGRES_USER; su postgres -l -c 'conda activate rdkit_built_dep;\
+CMD cp /postgresql.conf /var/lib/postgresql/data/postgresql.conf; useradd -m -s /bin/bash $POSTGRES_USER; su postgres -l -c 'conda activate rdkit_built_dep;\
   export PATH="$PATH:/usr/lib/postgresql/'$PG_MAJOR'/bin"; export LD_LIBRARY_PATH="/rdkit/lib:$CONDA_PREFIX/lib"; \
   postgres -D '"$PGDATA"
 
