@@ -4,7 +4,7 @@
 
 FROM postgres:16
 
-ENV PG_MAJOR 16
+ENV PG_MAJOR=16
 ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/$PG_MAJOR/bin
 
 RUN  apt-get update \
@@ -15,6 +15,7 @@ RUN  apt-get update \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
+    libfreetype6 \
     libxrender1 \
     mercurial \
     openssh-client \
@@ -29,6 +30,13 @@ RUN  apt-get update \
 RUN  apt-get update \
 && apt-get install -yq --no-install-recommends \
     ca-certificates; exit 0
+
+RUN UNAME_M="$(uname -m)" && \
+    if [ "${UNAME_M}" = "aarch64" ]; then \
+        apt-get update \
+        && apt-get install -yq --no-install-recommends \
+            libboost-all-dev; \
+    fi
 
 RUN apt-get clean \
  && rm -rf /var/lib/apt/lists/*
@@ -46,6 +54,7 @@ ARG SHA256SUM_LINUX64="b6597785e6b071f1ca69cf7be6d0161015b96340b9a9e132215d57134
 ARG INSTALLER_URL_S390X="https://repo.anaconda.com/miniconda/Miniconda3-py312_24.4.0-0-Linux-s390x.sh"
 ARG SHA256SUM_S390X="e973f1b6352d58b1ab35f30424f1565d7ffa469dcde2d52c86ec1c117db11aad"
 # renovate: datasource=custom.miniconda_installer
+
 ARG INSTALLER_URL_AARCH64="https://repo.anaconda.com/miniconda/Miniconda3-py312_24.4.0-0-Linux-aarch64.sh"
 ARG SHA256SUM_AARCH64="832d48e11e444c1a25f320fccdd0f0fabefec63c1cd801e606836e1c9c76ad51"
 
@@ -96,15 +105,35 @@ RUN wget --quiet https://github.com/rdkit/rdkit/archive/refs/tags/${RDKIT_VERSIO
 # CREATE CONDA RDKIT BUILD ENVIRONMENT
 # source: https://www.rdkit.org/docs/Install.html
 
-ADD requeriments_conda_rdkit_build.txt .
-# RUN conda create -y -c conda-forge --name rdkit_built_dep --file requeriments_conda_rdkit_build.txt
-RUN conda create -y --name rdkit_built_dep 
-RUN conda activate rdkit_built_dep;conda install -y -c conda-forge numpy matplotlib catch2 pytest; \
-conda install -y -c conda-forge cmake cairo pillow eigen pkg-config; \
-conda install -y -c conda-forge boost-cpp boost py-boost pandas; \
-conda install -y -c conda-forge gxx_linux-64;
-RUN pip install yapf==0.11.1
-RUN pip install coverage==3.7.1
+ADD requeriments_conda_rdkit_build_x86_64.txt .
+ADD requeriments_conda_rdkit_build_aarch64.txt .
+
+WORKDIR /
+
+RUN UNAME_M="$(uname -m)" && \
+    if [ "${UNAME_M}" = "x86_64" ]; then \
+        CONDA_ENV_REQUERIMENTS_FILE="requeriments_conda_rdkit_build_x86_64.txt"; \
+    elif [ "${UNAME_M}" = "s390x" ]; then \
+        CONDA_ENV_REQUERIMENTS_FILE="requeriments_conda_rdkit_build_s390x.txt"; \
+    elif [ "${UNAME_M}" = "aarch64" ]; then \
+        CONDA_ENV_REQUERIMENTS_FILE="requeriments_conda_rdkit_build_aarch64.txt"; \
+    fi; conda create -y -c conda-forge --name rdkit_built_dep --file "${CONDA_ENV_REQUERIMENTS_FILE}"
+
+# RUN conda create -y --name rdkit_built_dep 
+# RUN conda activate rdkit_built_dep;conda install -y --solver=classic conda-forge::conda-libmamba-solver conda-forge::libmamba conda-forge::libmambapy conda-forge::libarchive
+# # REMINDER: update numpy version requeriment for future RDKit versions
+# RUN conda activate rdkit_built_dep;conda install -y -c conda-forge numpy=1 matplotlib catch2 pytest; \
+# conda install -y -c conda-forge cmake cairo pillow eigen pkg-config; \ 
+# conda install -y -c conda-forge pandas;
+
+# RUN UNAME_M="$(uname -m)" && \
+#     if [ "${UNAME_M}" = "x86_64" ]; then \
+#         conda install -y -c conda-forge boost-cpp boost py-boost; \
+#         conda install -y -c conda-forge gxx_linux-64; \
+#     fi
+
+RUN conda activate rdkit_built_dep; pip install yapf==0.11.1
+RUN conda activate rdkit_built_dep; pip install coverage==3.7.1
 
 # BUILD RDKIT
 
@@ -114,23 +143,32 @@ RUN pip install coverage==3.7.1
 
 RUN mkdir /rdkit/build
 WORKDIR /rdkit/build
-RUN conda activate rdkit_built_dep;cmake -DPy_ENABLE_SHARED=1 \
-  -DRDK_INSTALL_INTREE=ON \
-  -DRDK_INSTALL_STATIC_LIBS=OFF \
-  -DRDK_BUILD_CPP_TESTS=ON \
-  -DPYTHON_NUMPY_INCLUDE_PATH="$(python -c 'import numpy ; print(numpy.get_include())')" \
-  -DBOOST_ROOT="$CONDA_PREFIX" \
-  -DBoost_NO_BOOST_CMAKE=OFF \
-  -DBoost_NO_SYSTEM_PATHS=OFF \
-  -DRDK_BUILD_AVALON_SUPPORT=ON \
-  -DRDK_BUILD_CAIRO_SUPPORT=ON \
-  -DRDK_BUILD_INCHI_SUPPORT=ON \
-  -D RDK_BUILD_PGSQL=ON \
-  -D PostgreSQL_CONFIG_DIR=/usr/lib/postgresql/$PG_MAJOR/bin \
-  -D PostgreSQL_INCLUDE_DIR="/usr/include/postgresql" \
-  -D PostgreSQL_TYPE_INCLUDE_DIR="/usr/include/postgresql/$PG_MAJOR/server" \
-  -D PostgreSQL_LIBRARY="/usr/lib/x86_64-linux-gnu/libpq.so.5" \
-  ..
+
+
+
+RUN  UNAME_M="$(uname -m)" && \
+    conda activate rdkit_built_dep;\
+    BOOST_ROOT=""; \
+    if [ "${UNAME_M}" = "x86_64" ]; then \
+        BOOST_ROOT="$CONDA_PREFIX"; \
+    fi; \
+    cmake -DPy_ENABLE_SHARED=1 \
+      -DRDK_INSTALL_INTREE=ON \
+      -DRDK_INSTALL_STATIC_LIBS=OFF \
+      -DRDK_BUILD_CPP_TESTS=ON \
+      -DPYTHON_NUMPY_INCLUDE_PATH="$(python -c 'import numpy ; print(numpy.get_include())')" \
+      -DBOOST_ROOT="$BOOST_ROOT" \
+      -DBoost_NO_BOOST_CMAKE=OFF \
+      -DBoost_NO_SYSTEM_PATHS=OFF \
+      -DRDK_BUILD_AVALON_SUPPORT=ON \
+      -DRDK_BUILD_CAIRO_SUPPORT=ON \
+      -DRDK_BUILD_INCHI_SUPPORT=ON \
+      -D RDK_BUILD_PGSQL=ON \
+      -D PostgreSQL_CONFIG_DIR=/usr/lib/postgresql/$PG_MAJOR/bin \
+      -D PostgreSQL_INCLUDE_DIR="/usr/include/postgresql" \
+      -D PostgreSQL_TYPE_INCLUDE_DIR="/usr/include/postgresql/$PG_MAJOR/server" \
+      -D PostgreSQL_LIBRARY="/usr/lib/${UNAME_M}-linux-gnu/libpq.so.5" \
+      ..
 
 RUN make  -j $(nproc)
 # INSTALL RDKIT
@@ -180,6 +218,7 @@ CMD export PATH="$PATH:/usr/lib/postgresql/'$PG_MAJOR'/bin"; bash -i docker-ensu
 
 # # TEST RDKIT BUILD AND INSTALLATION
 # /bin/bash
+
 # su $POSTGRES_USER -l -c 'createuser -sE postgres'
 # su postgres
 
@@ -189,14 +228,20 @@ CMD export PATH="$PATH:/usr/lib/postgresql/'$PG_MAJOR'/bin"; bash -i docker-ensu
 # export RDBASE=$PWD/..
 # export PYTHONPATH=$RDBASE
 # export LD_LIBRARY_PATH=$RDBASE/lib:$LD_LIBRARY_PATH
-
 # psql -c 'create extension rdkit'
 # ctest
 
 # For runing the image use:
-# docker run --network gpcrdb -d --platform linux/amd64 --name postgres16-rdkit2024_03_3 \
+# docker run --network gpcrdb -d --platform linux/amd64 --name postgres16-rdkit2024_03_3_v3 \
 # -v postgres_data:/var/lib/postgresql/data \
 # -e POSTGRES_USER=protwis \
 # -e POSTGRES_PASSWORD=protwis \
 # -p 5432:5432 \
-# postgres16-rdkit2024_03_3
+# postgres16-rdkit2024_03_3_v3
+
+# docker run --network gpcrdb -d --platform linux/arm64 --name postgres16-rdkit2024_03_3_mac \
+# -v postgres_data:/var/lib/postgresql/data \
+# -e POSTGRES_USER=protwis \
+# -e POSTGRES_PASSWORD=protwis \
+# -p 5432:5432 \
+# postgres16-rdkit2024_03_3_mac

@@ -1,7 +1,7 @@
 # Requeriments:
 
 ## Operative system
-- Ubuntu OS (tested only in Bionic 18.04)
+- Ubuntu OS x86-64 (tested only in Bionic 18.04)
 - Internet access
 
 ## Configuration assumptions
