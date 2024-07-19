@@ -9,7 +9,6 @@ ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:
 
 RUN  apt-get update \
 && apt-get install -yq --no-install-recommends \
-    ca-certificates \
     build-essential \
     wget \
     git \
@@ -25,6 +24,13 @@ RUN  apt-get update \
     postgresql-server-dev-$PG_MAJOR \
     postgresql-server-dev-all  \
  && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+RUN  apt-get update \
+&& apt-get install -yq --no-install-recommends \
+    ca-certificates; exit 0
+
+RUN apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
@@ -148,17 +154,25 @@ RUN echo "LD_LIBRARY_PATH = '/rdkit/lib:$CONDA_PREFIX/lib'" | tee -a /etc/postgr
 WORKDIR /rdkit
 RUN find . -type d -exec chgrp postgres {} +
 RUN find . -type d -exec chmod g+w {} +
-WORKDIR /rdkit/build
+
+WORKDIR /
 
 # POSTGRES SERVER CONFIGURATION
 ADD postgresql.conf /
-RUN cp /postgresql.conf /var/lib/postgresql/data/postgresql.conf
 
 # SETUP POSTGRES FOR TESTING
 RUN su postgres -l -c 'conda init'
 ENV POSTGRES_USER=protwis
 STOPSIGNAL SIGINT
-CMD useradd -m -s /bin/bash $POSTGRES_USER; su postgres -l -c 'conda activate rdkit_built_dep;\
+
+# Database initialisation and configuration scripts as Docker entrypoints.
+# https://github.com/docker-library/postgres/blob/master/16/bookworm/docker-ensure-initdb.sh
+# https://github.com/docker-library/postgres/blob/master/16/bookworm/docker-entrypoint.sh
+# Scripts only work if CMD is "postgres".
+# "bash -i docker-ensure-initdb.sh" runs the scripts with no CMD requeriment.
+
+
+CMD export PATH="$PATH:/usr/lib/postgresql/'$PG_MAJOR'/bin"; bash -i docker-ensure-initdb.sh; cp /postgresql.conf /var/lib/postgresql/data/postgresql.conf ; useradd -m -s /bin/bash $POSTGRES_USER; su postgres -l -c 'conda activate rdkit_built_dep; \
   export PATH="$PATH:/usr/lib/postgresql/'$PG_MAJOR'/bin"; export LD_LIBRARY_PATH="/rdkit/lib:$CONDA_PREFIX/lib"; \
   postgres -D '"$PGDATA"
 
