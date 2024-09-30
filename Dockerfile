@@ -231,7 +231,7 @@ CMD export PATH="$PATH:/usr/lib/postgresql/'$PG_MAJOR'/bin"; bash -i docker-ensu
 # psql -c 'create extension rdkit'
 # ctest
 
-# For runing the image use:
+# For running the image use for example:
 # docker run --network gpcrdb -d --platform linux/amd64 --name postgres16-rdkit2024_03_3_v3 \
 # -v postgres_data:/var/lib/postgresql/data \
 # -e POSTGRES_USER=protwis \
