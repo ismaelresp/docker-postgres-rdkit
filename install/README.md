@@ -73,7 +73,7 @@ To install the RDKit Cartridge:
 
 16. Run in the terminal `cd; bash -i test_rdkit_cartridge.sh -I [number]` to resume the tests. `[number]` is the ID number of the test.
 
-17. If you get an error while running test_rdkit_cartridge.sh or a test fails, your build or installation has errors.Send to Ismael the output of `cd; bash -i test_rdkit_cartridge.sh -VV -R [name_of_the_step_failed]`.  `[name_of_the_step_failed]` is a regular expression matching the name of the step failed.
+17. If you get an error while running test_rdkit_cartridge.sh or a test fails, your build or installation has errors. Send to Ismael the output of `cd; bash -i test_rdkit_cartridge.sh -VV -R [name_of_the_step_failed]`.  `[name_of_the_step_failed]` is a regular expression matching the name of the step failed.
 
 # Restoring *~/.bashrc*
 Once you have a working installation of the RDKit Cartridge if you have installed *conda*, you might want to restore and *~/.bashrc* files.
