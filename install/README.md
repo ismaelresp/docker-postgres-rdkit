@@ -64,7 +64,7 @@ To install the RDKit Cartridge:
 
 **DANGER!!!:** **THE FOLLOWING COMMANDS WILL WRITE IN DATABASES**. THEY ARE SUPPOSED TO ONLY CREATE DATABASES CALLED *regression* AND *rdkit-test* AND DROP THEM. HOWEVER, **BACKUP OF ALL THE DATABASES** IS HIGHLY RECOMMENDED BEFORE PROCEEDING.
 
-14. Run in the terminal `cd; bash -i test_rdkit_cartridge.sh` to start the test.
+14. Run in the terminal `bash -i test_rdkit_cartridge.sh` to start the test.
 
 15. If a test step does not progress for more than 5 min, take a note of the name and number of the lastest step. 
     Then, try to stop the script by pressing *CONTROL+C* in the terminal. 
