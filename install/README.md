@@ -11,7 +11,7 @@ So, the following line in *pg_hba.conf* is present and uncommented:
 
     local	all      all          peer
 
-Alternatively, the following line in *pg_hba.conf* should be present present and uncommented replacing POSTGRES_USER by the value of the *POSTGRES_USER* variable in `config.sh`. Default *rdkit-test*:
+Alternatively, the following line in *pg_hba.conf* should be present and uncommented replacing POSTGRES_USER by the value of the *POSTGRES_USER* variable in `config.sh`. Default *rdkit-test*:
 
     local	all      POSTGRES_USER          peer
 
