@@ -11,6 +11,12 @@ So, the following line in *pg_hba.conf* is present and uncommented:
 
     local	all      all          peer
 
+Alternatively, the following line in *pg_hba.conf* should be present present and uncommented replacing POSTGRES_USER by the value of the *POSTGRES_USER* variable in `config.sh`. Default *rdkit-test*:
+
+    local	all      POSTGRES_USER          peer
+
+These pg_hba.conf settings are only needed for installing and testing installation.
+
 PostgreSQL might require to be updated to the lastest minor version in the Ubuntu repository to match the version of the package *postgresql-server-dev-$PG_MAJOR* . Minor version updates hardly ever require to migrate the database data or configuration files.
 
 ### b. There is a PostgreSQL superuser that is also an Operative System user.
